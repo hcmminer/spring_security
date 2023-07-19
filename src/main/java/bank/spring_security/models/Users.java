@@ -1,9 +1,11 @@
 package bank.spring_security.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,14 +20,14 @@ public class Users {
     private int userId;
 
     @Column(name = "UserName", unique = true, nullable = false)
-    private String UserName;
+    private String userName;
 
     @Column(name = "PassWord", nullable = false)
     private String password;
 
-    @Column(name = "createdDate")
+    @Column(name = "createdDateTime")
     @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date createdDatetime;
+    private Date createdDateTime;
 
     @Column(name = "Email", unique = true, nullable = false)
     private String email;

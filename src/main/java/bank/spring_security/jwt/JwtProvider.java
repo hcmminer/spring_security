@@ -1,22 +1,24 @@
 package bank.spring_security.jwt;
 
 import bank.spring_security.security.CustomUserDetails;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
+@Component
+@Slf4j
 public class JwtProvider {
 
     @Value("${bank.jwt.salt}")
     private String JWT_SALT;
 
-    @Value("${bank.jwt.expiration]")
+    @Value("${bank.jwt.expiration}")
     private int JWT_EXPIRATION;
 
-    public String genToken(CustomUserDetails customUserDetails){
+    public String genToken(CustomUserDetails customUserDetails) {
         Date now = new Date();
         Date dateExpired = new Date(now.getTime() + JWT_EXPIRATION);
 
@@ -28,15 +30,33 @@ public class JwtProvider {
                 .compact();
 
     }
+
     // lay ten dang nhap tu token
-    public String getUserNameFromJwt (String token){
+    public String getUserNameFromJwt(String token) {
         Claims claims = Jwts.parser().setSigningKey(JWT_SALT)
                 .parseClaimsJws(token).getBody();
         return claims.getSubject();
 
     }
 
+    public boolean isValidToken(String token) {
+        try {
+            Jwts.parser().setSigningKey(JWT_SALT)
+                    .parseClaimsJws(token);
+            return true;
+        } catch (MalformedJwtException ex) {
+            log.error("Invalid JWT");
+        } catch (ExpiredJwtException ex) {
+            log.error("Expired JWT");
+        } catch (UnsupportedJwtException ex) {
+            log.error("Unsupported JWT");
+        } catch (IllegalArgumentException ex) {
+            log.error("JWT claims String is empty");
+        }
+        
+        return false;
 
+    }
 
 
 }

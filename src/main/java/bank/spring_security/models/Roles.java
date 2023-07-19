@@ -1,6 +1,6 @@
 package bank.spring_security.models;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -13,7 +13,7 @@ public class Roles {
     private int roleId;
 
     @Column(name = "RoleName")
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private ERoles roleName;
 
 }
